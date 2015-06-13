@@ -17,7 +17,8 @@ function startGame() {
 
 // check if nick is valid alphanumeric characters (and underscores)
 function validNick() {
-    var regex = /^\w*$/;
+    return true;
+    var regex = /^.{1,10}$/;
     console.log("Regex Test", regex.exec(playerNameInput.value));
     return regex.exec(playerNameInput.value) !== null;
 }
@@ -108,8 +109,8 @@ var enemyConfig = {
 
 var player = {
     id: -1,
-    x: screenWidth / 2, 
-    y: screenHeight / 2,    
+    x: screenWidth / 2,
+    y: screenHeight / 2,
     screenWidth: screenWidth,
     screenHeight: screenHeight,
 };
@@ -124,7 +125,7 @@ c.width = screenWidth; c.height = screenHeight;
 c.addEventListener('mouseout', outOfBounds, false);
 
 // register when the mouse goes off the canvas
-function outOfBounds() {    
+function outOfBounds() {
     target = { x : 0, y: 0 };
 }
 
@@ -277,39 +278,39 @@ function setupSocket(socket) {
 
     // Handle connection
     socket.on('welcome', function (playerSettings) {
-        player = playerSettings;        
-        player.name = playerName; 
+        player = playerSettings;
+        player.name = playerName;
         player.screenWidth = screenWidth;
-        player.screenHeight = screenHeight; 
+        player.screenHeight = screenHeight;
         socket.emit('gotit', player);
         gameStart = true;
         console.log('Game is started: ' + gameStart);
-        addSystemLine('Connected to the game!');
-        addSystemLine('Type <b>-help</b> for a list of commands');
+        addSystemLine('접속 성공!');
+        addSystemLine('<b>-help</b>을 입력해서 명령어 목록을 확인 가능합니다.');
     });
 
     socket.on('gameSetup', function(data){
         gameWidth = data.gameWidth;
-        gameHeight = data.gameHeight;        
+        gameHeight = data.gameHeight;
      });
 
     socket.on('playerDisconnect', function (data) {
         enemies = data.playersList;
-        document.getElementById('status').innerHTML = 'Players: ' + enemies.length;
-        addSystemLine('Player <b>' + data.disconnectName + '</b> disconnected!');
+        document.getElementById('status').innerHTML = '접속자 수: ' + enemies.length;
+        addSystemLine('Player <b>' + data.disconnectName + '</b>님이 나갔습니다!');
     });
 
     socket.on('playerDied', function (data) {
         enemies = data.playersList;
-        document.getElementById('status').innerHTML = 'Players: ' + enemies.length;
-        addSystemLine('Player <b>' + data.disconnectName + '</b> died!');
+        document.getElementById('status').innerHTML = '접속자 수: ' + enemies.length;
+        addSystemLine('Player <b>' + data.disconnectName + '</b>님이 죽었습니!');
     });
 
     socket.on('playerJoin', function (data) {
         console.log(data);
         enemies = data.playersList;
-        document.getElementById('status').innerHTML = 'Players: ' + enemies.length;
-        addSystemLine('Player <b>' + data.connectedName + '</b> joined!');
+        document.getElementById('status').innerHTML = '접속자 수: ' + enemies.length;
+        addSystemLine('Player <b>' + data.connectedName + '</b>님이 참여했습니다!');
     });
 
     socket.on('serverMSG', function (data) {
@@ -325,12 +326,12 @@ function setupSocket(socket) {
     socket.on('serverTellPlayerMove', function (playerData, userData, foodsList) {
         var xoffset = player.x - playerData.x;
         var yoffset = player.y - playerData.y;
-        
+
         player = playerData;
         player.xoffset = isNaN(xoffset) ? 0 : xoffset;
         player.yoffset = isNaN(yoffset) ? 0 : yoffset;
 
-        enemies = userData;        
+        enemies = userData;
         foods = foodsList;
     });
 
@@ -525,9 +526,9 @@ function gameLoop() {
             graph.fillStyle = backgroundColor;
             graph.fillRect(0, 0, screenWidth, screenHeight);
             drawgrid();
-            
+
             foods.forEach(function(f){ drawFood(f); });
-    
+
             if(borderDraw){ drawborder(); }
 
             for (var i = 0; i < enemies.length; i++) {

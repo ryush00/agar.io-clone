@@ -5,7 +5,7 @@
     "gameWidth": 5000,
     "gameHeight": 5000,
     "adminPass": "DEFAULT",
-    "gameMass": 2000,
+    "gameMass": 500,
     "slowDownLog": 2.5,
     "logChat": 0
 }
